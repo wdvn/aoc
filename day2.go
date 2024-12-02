@@ -47,9 +47,7 @@ func main() {
 		}
 		numbers := conv(nums)
 		for i := range len(numbers) {
-			tmp := make([]int, len(numbers))
-			copy(tmp, numbers)
-			if check(slices.Delete(tmp, i, i+1)) {
+			if check(slices.Delete(slices.Clone(numbers), i, i+1)) {
 				out++
 				break
 			}
