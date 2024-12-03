@@ -24,26 +24,32 @@ func part1(s []byte) int64 {
 	return out
 }
 
+func cal2(sub [][]byte, enable bool) (int64, bool) {
+	switch sub[0][3] {
+	case ')':
+		return 0, true
+	case "'"[0]:
+		return 0, false
+	default:
+		if !enable {
+			return 0, false
+		}
+		return cal(sub), true
+	}
+}
+
 func part2(s []byte) int64 {
 	enable := true
 	reg := regexp.MustCompile(`don't\(\)|do\(\)|mul\((\d+),(\d+)\)`)
-	var out int64
+	var out, v int64
 	subs := reg.FindAllSubmatch(s, -1)
 	for _, sub := range subs {
-		switch sub[0][3] {
-		case ')':
-			enable = true
-		case "'"[0]:
-			enable = false
-		default:
-			if !enable {
-				continue
-			}
-			out += cal(sub)
-		}
+		v, enable = cal2(sub, enable)
+		out += v
 	}
 	return out
 }
+
 func main() {
 	raw, _ := os.ReadFile("./input/day3.txt")
 
