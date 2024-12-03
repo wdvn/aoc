@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -27,22 +28,23 @@ func main() {
 	part2 := func() {
 		enable := true
 		reg := regexp.MustCompile(`don't\(\)|do\(\)|mul\((\d+),(\d+)\)`)
-
-		cal := reg.FindAllSubmatch(raw, -1)
 		var out int64
-		for _, sub := range cal {
-			switch string(sub[0]) {
-			case "do()":
-				enable = true
-			case "don't()":
-				enable = false
-			default:
-				if !enable {
-					continue
+		for _, line := range strings.Split(string(raw), "\n") {
+			cal := reg.FindAllStringSubmatch(line, -1)
+			for _, sub := range cal {
+				switch string(sub[0]) {
+				case "do()":
+					enable = true
+				case "don't()":
+					enable = false
+				default:
+					if !enable {
+						continue
+					}
+					n1, _ := strconv.Atoi(string(sub[1]))
+					n2, _ := strconv.Atoi(string(sub[2]))
+					out += int64(n1 * n2)
 				}
-				n1, _ := strconv.Atoi(string(sub[1]))
-				n2, _ := strconv.Atoi(string(sub[2]))
-				out += int64(n1 * n2)
 			}
 		}
 		fmt.Println(out, enable)
