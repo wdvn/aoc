@@ -50,11 +50,23 @@ func isValid2(n int, k int, index int, nums []int) bool {
 	if len(nums)-1 == index {
 		return n == k
 	}
+	if k > n {
+		return false
+	}
 	v, _ := strconv.Atoi(fmt.Sprintf("%d%d", k, nums[index+1]))
 	con := isValid2(n, v, index+1, nums)
+	if con {
+		return true
+	}
 	add := isValid2(n, k+nums[index+1], index+1, nums)
+	if add {
+		return true
+	}
 	mul := isValid2(n, k*nums[index+1], index+1, nums)
-	return add || mul || con
+	if mul {
+		return true
+	}
+	return false
 }
 
 // 456565678667482
