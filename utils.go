@@ -20,3 +20,12 @@ func printMatrix(grid [][]byte) {
 		fmt.Println(string(grid[row]))
 	}
 }
+
+func printMatrixA[T any](grid [][]T) {
+	for _, row := range grid {
+		for _, c := range row {
+			fmt.Printf("%v  ", c)
+		}
+		fmt.Println()
+	}
+}
