@@ -10,7 +10,7 @@ type Day11 struct {
 	mp map[string]int64
 }
 
-func (t *Day11) Extract2(n, blink int64) int64 {
+func (t *Day11) totalStoneByBlink(n, blink int64) int64 {
 	var out int64
 	if blink == 0 {
 		return 0
@@ -23,7 +23,7 @@ func (t *Day11) Extract2(n, blink int64) int64 {
 		if blink == 1 {
 			out += 1
 		} else {
-			out += t.Extract2(1, blink-1)
+			out += t.totalStoneByBlink(1, blink-1)
 		}
 
 	} else if len(fmt.Sprint(n))%2 == 0 {
@@ -33,15 +33,15 @@ func (t *Day11) Extract2(n, blink int64) int64 {
 		if blink == 1 {
 			out += 2
 		} else {
-			out += t.Extract2(n1, blink-1)
-			out += t.Extract2(n2, blink-1)
+			out += t.totalStoneByBlink(n1, blink-1)
+			out += t.totalStoneByBlink(n2, blink-1)
 		}
 
 	} else {
 		if blink == 1 {
 			out += 1
 		} else {
-			out += t.Extract2(n*2024, blink-1)
+			out += t.totalStoneByBlink(n*2024, blink-1)
 		}
 	}
 	t.mp[k] = out
@@ -52,7 +52,7 @@ func (t *Day11) part(raw []byte, blink int64) any {
 	start := t.parse(raw)
 	var out int64
 	for _, n := range start {
-		v := t.Extract2(int64(n), blink)
+		v := t.totalStoneByBlink(int64(n), blink)
 		out += v
 	}
 	return out
