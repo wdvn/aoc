@@ -6,6 +6,16 @@ import (
 	"strings"
 )
 
+type pair struct {
+	x, y int
+}
+
+type positionWithDirect struct {
+	x, y int
+	d    int
+}
+
+// FourDirections               ^       >        v       <
 var FourDirections = [][]int{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}
 
 func cloneMatrix[T any](grid [][]T) [][]T {
@@ -84,4 +94,21 @@ func (t *Matrix[T]) JumpByFourDirections(r, c int, f func(x, y int, item T)) {
 		}
 		f(nextR, nextC, (*t)[nextR][nextC])
 	}
+}
+
+func (t *Matrix[T]) JumpWithFourDirections(r, c int, f func(x, y int, d int)) {
+	for i, d := range FourDirections {
+		nextR, nextC := r+d[0], c+d[1]
+		if t.IsEscape(nextR, nextC) {
+			continue
+		}
+		f(nextR, nextC, i)
+	}
+}
+
+func abs(a int) int {
+	if a > 0 {
+		return a
+	}
+	return -a
 }

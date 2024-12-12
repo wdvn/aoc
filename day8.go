@@ -7,10 +7,6 @@ import (
 
 type Day8 struct{}
 
-type pair struct {
-	x, y int
-}
-
 func getKey(p pair) string {
 	return fmt.Sprintf("%d,%d", p.x, p.y)
 }
