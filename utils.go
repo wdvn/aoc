@@ -11,6 +11,10 @@ type pair struct {
 	x, y int
 }
 
+type pair64 struct {
+	x, y int64
+}
+
 type positionWithDirect struct {
 	x, y int
 	d    int

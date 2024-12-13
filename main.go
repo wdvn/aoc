@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	day := Day12{}
-	raw, _ := os.ReadFile("./input/day12.txt")
+	day := Day13{}
+	raw, _ := os.ReadFile("./input/day13.txt")
 	fmt.Println(day.part1(raw))
 	fmt.Println(day.part2(raw))
 
