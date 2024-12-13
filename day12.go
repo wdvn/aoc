@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 type Day12 struct {
 }
 
@@ -66,6 +70,7 @@ func (t Day12) isEdge(grid Matrix[byte], x, y, rawX, rawY int) bool {
 
 func (t Day12) countEdge(grid Matrix[byte], points Queue[pair]) int64 {
 	var edge int64
+	mp := map[string]int{}
 	for points.Len() > 0 {
 		p := points.Pop()
 		for i, d := range FourDirections {
@@ -73,24 +78,50 @@ func (t Day12) countEdge(grid Matrix[byte], points Queue[pair]) int64 {
 			if !t.isEdge(grid, x, y, p.x, p.y) {
 				continue
 			}
+			rootX, rootY := p.x, p.y
+			k := fmt.Sprintf("%d-%d-%d", rootX, rootY, i)
+			if mp[k] > 0 {
+				continue
+			}
+
 			edge++
-			//check x-y-d is edge
-			switch i {
-			case 0: //^
-				if t.isEdge(grid, x, y+1, p.x, p.y) && !t.isEdge(grid, x, y-1, p.x, p.y) {
-					edge--
+			mp[k] = 1
+			// FourDirections  ^   >   v   <
+
+			if i%2 == 0 {
+				for _, direct := range [][]int{FourDirections[1], FourDirections[3]} {
+					nextR, nextC := rootX, rootY
+					for !grid.IsEscape(nextR, nextC) {
+						nextR, nextC = nextR+direct[0], nextC+direct[1]
+						if grid.IsEscape(nextR, nextC) || grid[rootX][rootY] != grid[nextR][nextC] {
+							break
+						}
+						fx, fy := nextR+d[0], nextC+d[1]
+						k := fmt.Sprintf("%d-%d-%d", nextR, nextC, i)
+						if t.isEdge(grid, fx, fy, rootX, rootY) {
+							mp[k] = 1
+						} else {
+							break
+						}
+					}
 				}
-			case 1: // >
-				if t.isEdge(grid, x+1, y, p.x, p.y) && !t.isEdge(grid, x-1, y, p.x, p.y) {
-					edge--
-				}
-			case 2: //v
-				if t.isEdge(grid, x, y+1, p.x, p.y) && !t.isEdge(grid, x, y-1, p.x, p.y) {
-					edge--
-				}
-			case 3: //<
-				if t.isEdge(grid, x+1, y, p.x, p.y) && !t.isEdge(grid, x-1, y, p.x, p.y) {
-					edge--
+			} else {
+				for _, direct := range [][]int{FourDirections[0], FourDirections[2]} {
+					nextR, nextC := rootX, rootY
+
+					for !grid.IsEscape(nextR, nextC) {
+						nextR, nextC = nextR+direct[0], nextC+direct[1]
+						if grid.IsEscape(nextR, nextC) || grid[rootX][rootY] != grid[nextR][nextC] {
+							break
+						}
+						fx, fy := nextR+d[0], nextC+d[1]
+						k := fmt.Sprintf("%d-%d-%d", nextR, nextC, i)
+						if t.isEdge(grid, fx, fy, rootX, rootY) {
+							mp[k] = 1
+						} else {
+							break
+						}
+					}
 				}
 			}
 		}

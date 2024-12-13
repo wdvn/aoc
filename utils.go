@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"slices"
+	"sort"
 	"strings"
 )
 
@@ -83,7 +84,7 @@ func (t *Queue[T]) Add(item T) {
 type Matrix[T any] [][]T
 
 func (t *Matrix[T]) IsEscape(r, c int) bool {
-	return r < 0 || r >= len(*t) || c < 0 || c >= len((*t)[0])
+	return r < 0 || r >= len(*t) || c < 0 || c >= len((*t)[r])
 }
 
 func (t *Matrix[T]) JumpByFourDirections(r, c int, f func(x, y int, item T)) {
@@ -96,13 +97,23 @@ func (t *Matrix[T]) JumpByFourDirections(r, c int, f func(x, y int, item T)) {
 	}
 }
 
-func (t *Matrix[T]) JumpWithFourDirections(r, c int, f func(x, y int, d int)) {
-	for i, d := range FourDirections {
-		nextR, nextC := r+d[0], c+d[1]
-		if t.IsEscape(nextR, nextC) {
-			continue
+func (t *Matrix[T]) JumpVertical(r, c int, f func(x, y int)) {
+	for _, d := range [][]int{FourDirections[0], FourDirections[2]} {
+		nextR, nextC := r, c
+		for !t.IsEscape(nextR, nextC) {
+			f(nextR, nextC)
+			nextR, nextC = nextR+d[0], nextC+d[1]
 		}
-		f(nextR, nextC, i)
+	}
+}
+
+func (t *Matrix[T]) JumpHorizontal(r, c int, f func(x, y int)) {
+	for _, d := range [][]int{FourDirections[1], FourDirections[3]} {
+		nextR, nextC := r, c
+		for !t.IsEscape(nextR, nextC) {
+			f(nextR, nextC)
+			nextR, nextC = nextR+d[0], nextC+d[1]
+		}
 	}
 }
 
@@ -111,4 +122,15 @@ func abs(a int) int {
 		return a
 	}
 	return -a
+}
+
+func printSortedMap[T any](mp map[string]T) {
+	var arr []string
+	for k, _ := range mp {
+		arr = append(arr, k)
+	}
+	sort.Strings(arr)
+	for _, v := range arr {
+		fmt.Println(v, mp[v])
+	}
 }
