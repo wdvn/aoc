@@ -75,7 +75,7 @@ func (d Day16) part1(raw []byte) int {
 					chains = q.chains + 1
 					out = q.cost + 1
 				}
-				continue
+				break
 			}
 			c := q.cost + 1
 			if f != q.direct {
