@@ -30,7 +30,7 @@ func cloneMatrix[T any](grid [][]T) [][]T {
 	}
 	return result
 }
-func isEscape(grid [][]byte, x, y int) bool {
+func isEscape[T any](grid [][]T, x, y int) bool {
 	return x < 0 || x >= len(grid) || y < 0 || y >= len(grid[0])
 }
 func printMatrix(grid [][]byte) {
@@ -42,7 +42,7 @@ func printMatrix(grid [][]byte) {
 func printMatrixA[T any](grid [][]T) {
 	for _, row := range grid {
 		for _, c := range row {
-			fmt.Printf("%v  ", c)
+			fmt.Printf("%v", c)
 		}
 		fmt.Println()
 	}

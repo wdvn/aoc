@@ -1,8 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"math"
-	"slices"
+	"sort"
 )
 
 type Day16 struct {
@@ -16,7 +17,7 @@ type cost struct {
 	x, y   int
 	cost   int
 	direct int
-	chains []pair
+	chains int
 }
 
 type pairWithD struct {
@@ -36,6 +37,7 @@ func (d Day16) start(grid [][]byte) pair {
 	return s
 }
 
+// Using min heap + bfs for optimize travel time
 func (d Day16) part1(raw []byte) int {
 	grid := d.parse(raw)
 	start := d.start(grid)
@@ -43,15 +45,19 @@ func (d Day16) part1(raw []byte) int {
 	visited := map[pairWithD]int{}
 	queue.Add(cost{x: start.x, y: start.y, cost: 0, direct: 1})
 	out := math.MaxInt
-	mp := cloneMatrix(grid)
-	var chains []pair
-	defer func() {
-		for _, n := range chains {
-			mp[n.x][n.y] = '*'
-		}
-		printMatrix(mp)
-	}()
+	var chains int
+	//	mp := cloneMatrix(grid)
+	//	var chains []pair
+	//defer func() {
+	//	for _, n := range chains {
+	//		mp[n.x][n.y] = '*'
+	//	}
+	//	printMatrix(mp)
+	//}()
 	for queue.Len() > 0 {
+		sort.Slice(queue, func(i, j int) bool {
+			return queue[i].cost < queue[j].cost
+		})
 		q := queue.Pop()
 		pd := pairWithD{x: q.x, y: q.y, direct: q.direct}
 		if visited[pd] > 0 {
@@ -66,7 +72,7 @@ func (d Day16) part1(raw []byte) int {
 			}
 			if grid[x][y] == 'E' {
 				if out > q.cost+1 {
-					chains = q.chains
+					chains = q.chains + 1
 					out = q.cost + 1
 				}
 				continue
@@ -75,12 +81,14 @@ func (d Day16) part1(raw []byte) int {
 			if f != q.direct {
 				c += 1000
 			}
-			next := pair{x, y}
-			blocks := slices.Clone(q.chains)
-			queue.Add(cost{x: x, y: y, cost: c, direct: f, chains: append(blocks, next)})
+			//next := pair{x, y}
+			//blocks := slices.Clone(q.chains)
+			//queue.Add(cost{x: x, y: y, cost: c, direct: f, chains: append(blocks, next)})
+			queue.Add(cost{x: x, y: y, cost: c, direct: f, chains: q.chains + 1})
 		}
 	}
-
+	fmt.Println("part1:", out)
+	fmt.Println("part2:", chains)
 	return out
 }
 
