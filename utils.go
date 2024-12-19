@@ -130,11 +130,43 @@ func abs(a int) int {
 
 func printSortedMap[T any](mp map[string]T) {
 	var arr []string
-	for k, _ := range mp {
+	for k := range mp {
 		arr = append(arr, k)
 	}
 	sort.Strings(arr)
 	for _, v := range arr {
 		fmt.Println(v, mp[v])
 	}
+}
+
+type BinarySearch[T any] []T
+
+// TopSearch if directly to the right of mid is greater than mid => using right half array
+func (t BinarySearch[T]) TopSearch(greater func(mid, nextMid int) bool) int {
+	l, r := 0, len(t)
+	mid := l + r
+	for l < r {
+		mid = (l + r) / 2
+		if greater(mid, mid+1) {
+			l = mid + 1
+		} else {
+			r = mid
+		}
+	}
+	return mid
+}
+
+// BotSearch if directly to the left of mid is litter than mid => using left half array
+func (t BinarySearch[T]) BotSearch(litter func(mid, nextMid int) bool) int {
+	l, r := 0, len(t)
+	mid := l + r
+	for l < r {
+		mid = (l + r) / 2
+		if litter(mid, mid+1) {
+			l = mid + 1
+		} else {
+			r = mid
+		}
+	}
+	return mid
 }

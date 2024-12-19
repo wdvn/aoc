@@ -6,10 +6,8 @@ import (
 )
 
 func main() {
-	day := Day16{}
-	raw, _ := os.ReadFile("./input/day16.txt")
+	day := Day18{}
+	raw, _ := os.ReadFile("./input/day18.txt")
 	fmt.Println(day.part1(raw))
 	fmt.Println(day.part2(raw))
-
-	fmt.Println(isPointOnLine(pair{0, 1}, pair{1, 1}, pair{0, 0}))
 }
