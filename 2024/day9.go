@@ -1,4 +1,4 @@
-package main
+package _024
 
 type Day9 struct{}
 
