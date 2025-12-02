@@ -1,8 +1,10 @@
 const std = @import("std");
 
 const utils = @import("utils");
-
+const allocator = std.heap.page_allocator;
 pub fn main() !void {
-    const detail = utils.read_file("/home/mypc/projects/aoc/2025/day1/input.txt");
-    std.debug.print("{s}", .{detail});
+    const detail = try utils.read_file("./input.txt", allocator);
+    
+    std.debug.print("{s}\n", .{detail});
+    std.debug.print("{}", .{"1"[0]});
 }
