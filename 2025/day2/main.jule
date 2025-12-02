@@ -1,0 +1,75 @@
+use "std/conv"
+use "std/fmt"
+use "std/os"
+use "std/strings"
+
+fn part1() {
+	let buf = os::ReadFile("./input.txt") else {
+		ret
+	}
+	let lines = strings::Split(str(buf), ",")
+	let mut out = 0
+	for _, line in lines {
+		let nums = strings::Split(line, "-")
+		mut min := conv::Atoi(nums[0]) else {
+			println(error)
+			use -1
+		}
+		max := conv::Atoi(nums[1]) else {
+			println(error)
+			use -1
+		}
+		for min <= max; min++ {
+			raw := conv::Itoa(min)
+			if raw[:len(raw)/2] == raw[len(raw)/2:] {
+				out += min
+			}
+		}
+	}
+	println(out)
+}
+
+fn part2() {
+	let buf = os::ReadFile("./input.txt") else {
+		ret
+	}
+	let lines = strings::Split(str(buf), ",")
+	let mut out = 0
+	for _, line in lines {
+		let nums = strings::Split(line, "-")
+		mut min := conv::Atoi(nums[0]) else {
+			println(error)
+			use -1
+		}
+		max := conv::Atoi(nums[1]) else {
+			println(error)
+			use -1
+		}
+		for min <= max; min++ {
+			raw := conv::Itoa(min)
+			mut invalid := false
+			let mut range = 1
+			for range < len(raw)/2; range++ {
+				prefix := raw[:range]
+				mut s := prefix
+
+				for len(s) < len(raw) {
+					s += prefix
+				}
+				if (s == raw) {
+					invalid = true
+					break
+				}
+			}
+			if invalid {
+				out += min
+			}
+		}
+	}
+	println(out)
+}
+
+fn main() {
+	part1()
+	part2()
+}

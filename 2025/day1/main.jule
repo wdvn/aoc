@@ -1,0 +1,55 @@
+use "std/conv"
+use "std/fmt"
+use "std/strings"
+
+const ex = `
+L68
+L30
+R48
+L5
+R60
+L55
+L1
+L99
+R14
+L82
+`
+
+fn task1(): int {
+	let steps = strings::Split(input1, "\n")
+	let mut p: i64 = 50
+	let mut out = 0
+	for i in steps {
+		let step = steps[i]
+		let mut r = strings::TrimLeft(step, "L")
+		r = strings::TrimLeft(r, "R")
+		r = strings::TrimSpace(r)
+		if r == "" {
+			continue
+		}
+		let mut next: i64 = 0
+		next = conv::ParseInt(r, 10, 64) else {
+			println(error)
+			use -1
+		}
+
+		let mut a: i64 = 0
+		for a < next; a++ {
+			if step[0] == 'L' {
+				p--
+			} else {
+				p++
+			}
+			p=p%100
+			if p == 0 {
+				out++
+			}
+			
+		}
+	}
+	ret out
+}
+fn main() {
+	let t1 = task1()
+	println(t1)
+}
