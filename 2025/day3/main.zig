@@ -79,4 +79,12 @@ pub fn main() !void {
     try part2();
 }
 
-test "a" {}
+test "a" {
+    const s = "818181911112111";
+    std.debug.print("{}", .{s.len});
+    const raw = try utils.read_file("./input.txt", allocator);
+    std.debug.print("{}\n", .{raw.len});
+
+    const buf = try std.fs.cwd().readFileAlloc(allocator,"input.txt",100000000000000);
+    std.debug.print("{s} {}", .{buf, buf.len});
+}
