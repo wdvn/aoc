@@ -1,3 +1,6 @@
+import re
+import math
+
 def read_file(path) -> str:
     with open(path, 'r') as file:
         content = file.read()
@@ -18,15 +21,17 @@ def extract():
 
 def part1():
     out = 0
-    matrix = extract()
-    for col in range(0, len(matrix[-1])):
-        sum = int(matrix[0][col])
-        for i in range(1, len(matrix) - 1):
-            if matrix[-1][col] == "+":
-                sum += int(matrix[i][col])
-            else:
-                sum *= int(matrix[i][col])
-        out += sum
+    lines = extract()
+    matrix = []
+    for line in lines[:-1]:
+        matrix.append([int(n) for n in re.findall(r"\d+", line)])
+    ops= re.findall(r"\S",lines[-1])
+    matrix=[list(row) for row in zip(*matrix)]
+    for i,op in enumerate(ops):
+        if op=="+":
+            out+= sum(matrix[i])
+        else:
+            out+= math.prod(matrix[i])
     print(out)
 
 
@@ -53,22 +58,13 @@ def part2():
             for raw in news:
                 if raw[i] != " ":
                     nums[i] += raw[i]
-        vals=[]
-        for n in nums:
-            try:
-                vals.append(int(n))
-            except:
-                continue
+        vals=[int(n) for n in nums if n.isdigit()]
         val = vals[0]
-        for i  in range(1,len(vals)):
-            if op == "+":
-                val += vals[i]
-            else:
-                val *= vals[i]
+        for v  in vals[1:]:
+            val = val + v if op == "+" else val * v
         out += val
     print(out)
 
-
 if __name__ == '__main__':
-    # part1()
+    part1()
     part2()
